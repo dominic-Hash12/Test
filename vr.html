@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Campus VR</title>
+    
+
+    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+
+</head>
+
+<body>
+    <a-scene vr-mode-ui="enabled: false">
+
+    <a-assets>
+        <img id="campus" src="images/images.jpeg">
+    </a-assets>
+
+    <a-sky src="#campus"></a-sky>
+
+    <a-camera
+        look-controls="magicWindowTrackingEnabled: true">
+    </a-camera>
+
+    </a-scene>
+
+</body>
+
+
+</html>
