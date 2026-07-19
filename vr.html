@@ -29,33 +29,56 @@ overflow:hidden;
 #videoContainer{
 
 position:absolute;
-
 width:100vw;
-
 height:100vh;
 
 display:flex;
-
 justify-content:center;
-
 align-items:center;
 
 background:black;
 
 transition:1s;
+
 }
 
 video{
 
 width:100%;
-
 height:100%;
-
 object-fit:cover;
 
 }
 
-/* ---------------- HOTSPOT ---------------- */
+/* ---------------- SPEED CONTROL ---------------- */
+
+#videoControls{
+
+position:absolute;
+
+top:20px;
+right:20px;
+
+background:rgba(0,0,0,.7);
+
+padding:12px;
+
+border-radius:10px;
+
+color:white;
+
+z-index:100;
+
+}
+
+#speed{
+
+padding:5px;
+font-size:16px;
+
+}
+
+/* ---------------- EXPLORE BUTTON ---------------- */
 
 #enter360{
 
@@ -85,7 +108,7 @@ display:none;
 
 transition:.3s;
 
-z-index:10;
+z-index:100;
 
 }
 
@@ -97,6 +120,36 @@ transform:translateX(-50%) scale(1.05);
 
 }
 
+/* ---------------- EXIT BUTTON ---------------- */
+
+#exit360{
+
+position:absolute;
+
+top:20px;
+
+left:20px;
+
+padding:15px 25px;
+
+font-size:18px;
+
+border:none;
+
+border-radius:40px;
+
+background:#dc2626;
+
+color:white;
+
+cursor:pointer;
+
+display:none;
+
+z-index:9999;
+
+}
+
 /* ---------------- FADE ---------------- */
 
 #fade{
@@ -104,7 +157,6 @@ transform:translateX(-50%) scale(1.05);
 position:absolute;
 
 width:100vw;
-
 height:100vh;
 
 background:black;
@@ -115,7 +167,7 @@ pointer-events:none;
 
 transition:1s;
 
-z-index:50;
+z-index:500;
 
 }
 
@@ -126,7 +178,6 @@ z-index:50;
 display:none;
 
 width:100vw;
-
 height:100vh;
 
 }
@@ -139,13 +190,32 @@ height:100vh;
 
 <div id="fade"></div>
 
+<!-- ================= VIDEO ================= -->
+
 <div id="videoContainer">
 
-<video id="tourVideo">
+<video id="tourVideo" muted controls>
 
 <source src="videos/entrance.mp4" type="video/mp4">
 
 </video>
+
+<div id="videoControls">
+
+<label>Speed :</label>
+
+<select id="speed">
+
+<option value="0.5">0.5×</option>
+<option value="0.75">0.75×</option>
+<option value="1" selected>1×</option>
+<option value="1.25">1.25×</option>
+<option value="1.5">1.5×</option>
+<option value="2">2×</option>
+
+</select>
+
+</div>
 
 <button id="enter360">
 
@@ -155,7 +225,15 @@ height:100vh;
 
 </div>
 
+<!-- ================= VR ================= -->
+
 <div id="vrContainer">
+
+<button id="exit360">
+
+⬅ Exit 360°
+
+</button>
 
 <a-scene vr-mode-ui="enabled:false">
 
@@ -168,9 +246,7 @@ height:100vh;
 <a-sky src="#campus"></a-sky>
 
 <a-camera
-
 look-controls="magicWindowTrackingEnabled:true">
-
 </a-camera>
 
 </a-scene>
@@ -179,33 +255,47 @@ look-controls="magicWindowTrackingEnabled:true">
 
 <script>
 
-const video=document.getElementById("tourVideo");
+const video = document.getElementById("tourVideo");
+const exploreBtn = document.getElementById("enter360");
+const exitBtn = document.getElementById("exit360");
+const fade = document.getElementById("fade");
+const videoContainer = document.getElementById("videoContainer");
+const vrContainer = document.getElementById("vrContainer");
+const speed = document.getElementById("speed");
 
-const button=document.getElementById("enter360");
+let resumeTime = 43;
 
-const fade=document.getElementById("fade");
+// ---------------- Video ----------------
 
-const videoContainer=document.getElementById("videoContainer");
-
-const vrContainer=document.getElementById("vrContainer");
-
+video.muted = true;
+video.controls = true;
 video.play();
 
-/* Show button after 15 seconds */
+// ---------------- Playback Speed ----------------
+
+speed.addEventListener("change",()=>{
+
+video.playbackRate=parseFloat(speed.value);
+
+});
+
+// ---------------- Show Explore Button ----------------
 
 video.addEventListener("timeupdate",()=>{
 
-if(video.currentTime>5){
+if(video.currentTime>=43){
 
-button.style.display="block";
+exploreBtn.style.display="block";
 
 }
 
 });
 
-/* Switch to VR */
+// ---------------- Enter 360 ----------------
 
-button.onclick=()=>{
+exploreBtn.onclick=()=>{
+
+resumeTime=video.currentTime;
 
 video.pause();
 
@@ -216,6 +306,32 @@ setTimeout(()=>{
 videoContainer.style.display="none";
 
 vrContainer.style.display="block";
+
+exitBtn.style.display="block";
+
+fade.style.opacity=0;
+
+},1000);
+
+};
+
+// ---------------- Exit 360 ----------------
+
+exitBtn.onclick=()=>{
+
+fade.style.opacity=1;
+
+setTimeout(()=>{
+
+vrContainer.style.display="none";
+
+videoContainer.style.display="flex";
+
+exitBtn.style.display="none";
+
+video.currentTime=resumeTime;
+
+video.play();
 
 fade.style.opacity=0;
 
