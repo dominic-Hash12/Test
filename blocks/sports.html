@@ -212,7 +212,6 @@ video{
 }
 
 /* ================= INFO PANEL ================= */
-
 #infoPanel{
 
     position:absolute;
@@ -222,47 +221,113 @@ video{
 
     width:330px;
 
-    background:rgba(15,23,42,.82);
+    background:rgba(15,23,42,.85);
 
     backdrop-filter:blur(15px);
 
     color:white;
 
-    border-radius:20px;
+    border-radius:18px;
 
-    padding:22px;
-
-    display:none;
+    overflow:hidden;
 
     z-index:999;
 
-}
-
-#infoPanel h2{
-
-    margin-bottom:10px;
+    transition:0.4s;
 
 }
 
-#infoPanel p{
+/* Header */
 
-    color:#ddd;
+#infoHeader{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:18px;
+
+    cursor:pointer;
+
+    background:rgba(255,255,255,.05);
+
+}
+
+#infoHeader h2{
+
+    font-size:20px;
+
+}
+
+/* Toggle Button */
+
+#toggleInfo{
+
+    background:none;
+
+    border:none;
+
+    color:white;
+
+    font-size:22px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+/* Content */
+
+#infoContent{
+
+    max-height:500px;
+
+    overflow:hidden;
+
+    transition:max-height .4s ease;
+
+    padding:18px;
+
+}
+
+#infoContent p{
 
     line-height:1.6;
 
     margin-bottom:15px;
 
-}
-
-#infoPanel ul{
-
-    margin-left:18px;
+    color:#ddd;
 
 }
 
-#infoPanel li{
+#infoContent ul{
+
+    margin-left:20px;
+
+}
+
+#infoContent li{
 
     margin-bottom:8px;
+
+}
+
+/* Collapsed */
+
+#infoPanel.collapsed #infoContent{
+
+    max-height:0;
+
+    padding:0 18px;
+
+}
+
+#infoPanel.collapsed #toggleInfo{
+
+    transform:rotate(-90deg);
 
 }
 
@@ -391,31 +456,33 @@ video{
 
 </div>
 
-<div id="infoPanel">
+<div id="infoPanel" class="collapsed">
 
-<h2>Academic Block</h2>
+    <div id="infoHeader">
 
-<p>
+        <h2>📍 Academic Block</h2>
 
-The Science Block houses laboratories, classrooms,
-faculty rooms and research facilities for students
-across various science disciplines.
+        <button id="toggleInfo">▼</button>
 
-</p>
+    </div>
 
-<ul>
+    <div id="infoContent">
 
-<li>🧪 Chemistry Laboratory</li>
+        <p>
+            The Science Block houses laboratories, classrooms,
+            faculty rooms and research facilities for students
+            across various science disciplines.
+        </p>
 
-<li>🔬 Physics Laboratory</li>
+        <ul>
+            <li>🧪 Chemistry Laboratory</li>
+            <li>🔬 Physics Laboratory</li>
+            <li>💻 Computer Laboratory</li>
+            <li>📚 Smart Classrooms</li>
+            <li>👨‍🏫 Faculty Rooms</li>
+        </ul>
 
-<li>💻 Computer Laboratory</li>
-
-<li>📚 Smart Classrooms</li>
-
-<li>👨‍🏫 Faculty Rooms</li>
-
-</ul>
+    </div>
 
 </div>
 
@@ -612,6 +679,20 @@ document.addEventListener("contextmenu",(e)=>{
 // ================= READY =================
 
 console.log("Science Block Loaded Successfully");
+
+
+const toggleInfo = document.getElementById("toggleInfo");
+const infoHeader = document.getElementById("infoHeader");
+
+function togglePanel(){
+
+    infoPanel.classList.toggle("collapsed");
+
+}
+
+toggleInfo.addEventListener("click",togglePanel);
+
+infoHeader.addEventListener("click",togglePanel);
 
 </script>
 
